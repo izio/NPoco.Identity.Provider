@@ -12,13 +12,18 @@ namespace NPoco.Identity.Provider.Stores
     {
         private Database _database;
 
-        public RoleStore(string connection)
+        public RoleStore(string connectionName)
         {
-            _database = new Database(connection);
+            _database = new Database(connectionName);
+        }
+
+        public RoleStore(string connectionString, DatabaseType type)
+        {
+            _database = new Database(connectionString, type);
         }
 
         #region IQueryableRoleStore
-        
+
         public IQueryable<TRole> Roles
         {
             get
