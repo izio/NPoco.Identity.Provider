@@ -65,7 +65,7 @@ namespace NPoco.Identity.Provider.Stores
                 throw new ArgumentException("Null or empty argument: userId");
             }
 
-            var user = _database.SingleOrDefaultById<TUser>(userId);
+            var user = _database.FirstOrDefault<TUser>("WHERE Id = @0", userId);
 
             if (user != null)
             {
@@ -82,7 +82,7 @@ namespace NPoco.Identity.Provider.Stores
                 throw new ArgumentException("Null or empty argument: userName");
             }
 
-            var user = _database.SingleOrDefault<TUser>("WHERE Username = @0", userName);
+            var user = _database.FirstOrDefault<TUser>("WHERE Username = @0", userName);
 
             return Task.FromResult(user);
         }
@@ -138,7 +138,7 @@ namespace NPoco.Identity.Provider.Stores
 
             var query = _database.BuildRelatedSelectQuery<TUser, TLogins>(new TableProperties("Id", "[User]", new List<string> { "*" } ), new TableProperties("UserId", "[Login]"), Join.LeftJoin, "WHERE [Login].LoginProvider = @0 AND [Login].ProviderKey = @1");
 
-            var user = _database.SingleOrDefault<TUser>(query, login.LoginProvider, login.ProviderKey);
+            var user = _database.FirstOrDefault<TUser>(query, login.LoginProvider, login.ProviderKey);
 
             if (user != null)
             {
@@ -155,7 +155,7 @@ namespace NPoco.Identity.Provider.Stores
                 throw new ArgumentNullException("Null or empty argument: user");
             }
 
-            List<TLogins> logins = _database.Fetch<TLogins>("WHERE UserId = @0", user.Id);
+            IEnumerable<TLogins> logins = _database.Query<TLogins>("WHERE UserId = @0", user.Id);
 
             if (logins != null)
             {
@@ -247,7 +247,7 @@ namespace NPoco.Identity.Provider.Stores
 
             if (role != null)
             {
-                _database.Insert(new { UserId = user.Id, RoleId = role.Id } as TRole);
+                _database.Insert(new TRoles() { UserId = user.Id, RoleId = role.Id });
             }
 
             return Task.FromResult<object>(null);
@@ -267,7 +267,7 @@ namespace NPoco.Identity.Provider.Stores
 
             var query = _database.BuildRelatedDeleteQuery<TRoles, TRole>(new TableProperties("RoleId", "[Roles]"), new TableProperties("Id", "[Role]"), Join.InnerJoin, "WHERE [Roles].UserId = @0 AND [Role].Name = @1");
 
-            _database.Delete<TRoles>(query, user.Id, roleName);
+            _database.Execute(query, user.Id, roleName);
 
             return Task.FromResult<object>(null);
         }
@@ -303,14 +303,14 @@ namespace NPoco.Identity.Provider.Stores
             }
 
             var query = _database.BuildRelatedSelectQuery<TRole, TRoles>(new TableProperties("Id", "[Role]", new List<string> { "Name" }), new TableProperties("RoleId", "[Roles]"), Join.LeftJoin, "WHERE [Roles].UserId = @0 AND [Role].Name = @1");
-            var roles = _database.Fetch<string>(query, user.Id, roleName);
+            var role = _database.FirstOrDefault<string>(query, user.Id, roleName);
 
-            if (roles != null)
+            if (string.IsNullOrEmpty(role))
             {
-                return Task.FromResult(true);
+                return Task.FromResult(false); 
             }
 
-            return Task.FromResult(false);
+            return Task.FromResult(true);
         }
 
         #endregion
@@ -455,7 +455,7 @@ namespace NPoco.Identity.Provider.Stores
                 throw new ArgumentException("Null or empty argument: email");
             }
 
-            TUser user = _database.SingleOrDefault<TUser>("WHERE Email = @0", email);
+            TUser user = _database.FirstOrDefault<TUser>("WHERE Email = @0", email);
 
             return Task.FromResult(user);
         }

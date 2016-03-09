@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using NPoco.Identity.Provider.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NPoco.Identity.Provider.Stores
@@ -68,7 +66,7 @@ namespace NPoco.Identity.Provider.Stores
                 throw new ArgumentException("Null or empty argument: roleId");
             }
 
-            var role = _database.SingleOrDefaultById<TRole>(roleId);
+            var role = _database.FirstOrDefault<TRole>("WHERE Id = @0", roleId);
 
             return Task.FromResult(role);
         }
@@ -80,7 +78,7 @@ namespace NPoco.Identity.Provider.Stores
                 throw new ArgumentException("Null or empty argument: roleName");
             }
 
-            var role = _database.SingleOrDefault<TRole>("WHERE Name = @0", roleName);
+            var role = _database.FirstOrDefault<TRole>("WHERE Name = @0", roleName);
 
             return Task.FromResult(role);
         }
