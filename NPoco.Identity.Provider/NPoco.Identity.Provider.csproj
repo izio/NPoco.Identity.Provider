@@ -58,6 +58,7 @@
     <Compile Include="Interfaces\IIdentityRoles.cs" />
     <Compile Include="Interfaces\IIdentityUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stores\RoleStore.cs" />
     <Compile Include="Stores\UserStore.cs" />
     <Compile Include="TableProperties.cs" />
   </ItemGroup>
