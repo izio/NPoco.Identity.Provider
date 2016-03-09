@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace NPoco.Identity.Provider
@@ -11,17 +12,48 @@ namespace NPoco.Identity.Provider
         /// <summary>
         /// 
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public List<string> Columns { get; set; }
+        public List<string> Columns { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string Alias { get; set; }
+        public string Alias { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="alias"></param>
+        public TableProperties(string id, string alias) : this(id, alias, new List<string>())
+        {
+            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="alias"></param>
+        /// <param name="columns"></param>
+        public TableProperties(string id, string alias, List<string> columns)
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                throw new ArgumentException("id");
+            }
+
+            if (string.IsNullOrEmpty(Alias))
+            {
+                throw new ArgumentException("alias");
+            }
+
+            Columns = columns;
+        }
 
         /// <summary>
         /// 
@@ -33,13 +65,13 @@ namespace NPoco.Identity.Provider
 
             for (int i = 0; i < Columns.Count; i++)
             {
-                if (i == Columns.Count - 1)
+                if (string.IsNullOrEmpty(Alias))
                 {
-                    builder.AppendFormat("{0}.{1} ", Alias, Columns[i]);
+                    builder.AppendFormat(i == Columns.Count - 1 ? "{1} " : "{1}, ", Alias, Columns[i]);
                 }
                 else
                 {
-                    builder.AppendFormat("{0}.{1}, ", Alias, Columns[i]);
+                    builder.AppendFormat(i == Columns.Count - 1 ? "{1} " : "{1}, ", Alias, Columns[i]);
                 }
             }
 
