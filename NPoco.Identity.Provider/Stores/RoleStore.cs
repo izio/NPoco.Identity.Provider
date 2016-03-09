@@ -18,7 +18,7 @@ namespace NPoco.Identity.Provider.Stores
         }
 
         #region IQueryableRoleStore
-
+        
         public IQueryable<TRole> Roles
         {
             get
@@ -31,7 +31,7 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (role == null)
             {
-                throw new ArgumentNullException("role");
+                throw new ArgumentNullException("Null or empty argument: role");
             }
 
             _database.Insert(role);
@@ -43,7 +43,7 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (role == null)
             {
-                throw new ArgumentNullException("role");
+                throw new ArgumentNullException("Null or empty argument: role");
             }
 
             _database.Delete(role);
@@ -60,7 +60,7 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (roleId == null)
             {
-                throw new ArgumentException("roleId");
+                throw new ArgumentException("Null or empty argument: roleId");
             }
 
             var role = _database.SingleOrDefaultById<TRole>(roleId);
@@ -72,7 +72,7 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (string.IsNullOrEmpty(roleName))
             {
-                throw new ArgumentException("roleName");
+                throw new ArgumentException("Null or empty argument: roleName");
             }
 
             var role = _database.SingleOrDefault<TRole>("WHERE Name = @0", roleName);
@@ -84,7 +84,7 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (role == null)
             {
-                throw new ArgumentNullException("role");
+                throw new ArgumentNullException("Null or empty argument: role");
             }
 
             _database.Update(role);

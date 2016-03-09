@@ -35,7 +35,7 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             _database.Insert(user);
@@ -86,7 +86,7 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             _database.Update(user);
@@ -111,12 +111,12 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             if (login == null)
             {
-                throw new ArgumentNullException("login");
+                throw new ArgumentNullException("Null or empty argument: login");
             }
 
             _database.Insert(new TLogins() { UserId = user.Id, LoginProvider = login.LoginProvider, ProviderKey = login.ProviderKey });
@@ -128,7 +128,7 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (login == null)
             {
-                throw new ArgumentNullException("login");
+                throw new ArgumentNullException("Null or empty argument: login");
             }
 
             var query = _database.BuildRelatedSelectQuery<TUser, TLogins>(new TableProperties("Id", "[User]", new List<string> { "*" } ), new TableProperties("UserId", "[Login]"), Join.LeftJoin, "WHERE [Login].LoginProvider = @0 AND [Login].ProviderKey = @1");
@@ -147,7 +147,7 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             List<TLogins> logins = _database.Fetch<TLogins>("WHERE UserId = @0", user.Id);
@@ -164,12 +164,12 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             if (login == null)
             {
-                throw new ArgumentNullException("login");
+                throw new ArgumentNullException("Null or empty argument: login");
             }
 
             _database.Delete<TLogins>("WHERE UserId = @0 AND LoginProvider = @1 AND ProviderKey = @2", user.Id, login.LoginProvider, login.ProviderKey);
@@ -185,12 +185,12 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             if (claim == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             _database.Insert(new TClaims() { UserId = user.Id, ClaimType = claim.Type, ClaimValue = claim.Value });
@@ -209,12 +209,12 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             if (claim == null)
             {
-                throw new ArgumentNullException("claim");
+                throw new ArgumentNullException("Null or empty argument: claim");
             }
 
             _database.Delete<TClaims>("WHERE UserId = @0 AND ClaimType = @1 AND ClaimValue = @2", user.Id, claim.Type, claim.Value);
@@ -230,12 +230,12 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             if (string.IsNullOrEmpty(roleName))
             {
-                throw new ArgumentException("Argument cannot be null or empty: roleName.");
+                throw new ArgumentException("Null or empty argument: roleName.");
             }
 
             var role = _database.SingleOrDefault<TRole>("WHERE Name = @0", roleName);
@@ -252,12 +252,12 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             if (string.IsNullOrWhiteSpace(roleName))
             {
-                throw new ArgumentNullException("roleName");
+                throw new ArgumentNullException("Null or empty argument: roleName");
             }
 
             var query = _database.BuildRelatedDeleteQuery<TRoles, TRole>(new TableProperties("RoleId", "[Roles]"), new TableProperties("Id", "[Role]"), Join.InnerJoin, "WHERE [Roles].UserId = @0 AND [Role].Name = @1");
@@ -271,7 +271,7 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             var query = _database.BuildRelatedSelectQuery<TRole, TRoles>(new TableProperties("Id", "[Role]", new List<string> { "Name" }), new TableProperties("RoleId", "[Roles]"), Join.LeftJoin, "WHERE [Roles].UserId = @0");
@@ -289,12 +289,12 @@ namespace NPoco.Identity.Provider.Stores
         {
             if (user == null)
             {
-                throw new ArgumentNullException("user");
+                throw new ArgumentNullException("Null or empty argument: user");
             }
 
             if (string.IsNullOrEmpty(roleName))
             {
-                throw new ArgumentNullException("roleName");
+                throw new ArgumentNullException("Null or empty argument: roleName");
             }
 
             var query = _database.BuildRelatedSelectQuery<TRole, TRoles>(new TableProperties("Id", "[Role]", new List<string> { "Name" }), new TableProperties("RoleId", "[Roles]"), Join.LeftJoin, "WHERE [Roles].UserId = @0 AND [Role].Name = @1");
@@ -314,6 +314,16 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task SetPasswordHashAsync(TUser user, string passwordHash)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
+            if (string.IsNullOrEmpty(passwordHash))
+            {
+                throw new ArgumentException("Null or empty argument: passwordHash");
+            }
+
             user.PasswordHash = passwordHash;
 
             _database.Update(user);
@@ -323,6 +333,11 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task<string> GetPasswordHashAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             var identity = _database.SingleOrDefaultById<TUser>(user.Id);
 
             return Task.FromResult(identity.PasswordHash);
@@ -330,6 +345,10 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task<bool> HasPasswordAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
             var identity = _database.SingleOrDefaultById<TUser>(user.Id);
 
             return Task.FromResult(bool.Parse(identity.PasswordHash));
@@ -341,6 +360,16 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task SetSecurityStampAsync(TUser user, string stamp)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
+            if (string.IsNullOrEmpty(stamp))
+            {
+                throw new ArgumentException("Null or empty argument: stamp");
+            }
+
             user.SecurityStamp = stamp;
 
             return Task.FromResult(0);
@@ -348,6 +377,11 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task<string> GetSecurityStampAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             return Task.FromResult(user.SecurityStamp);
         }
 
@@ -357,6 +391,16 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task SetEmailAsync(TUser user, string email)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentException("Null or empty argument: email");
+            }
+
             user.Email = email;
 
             _database.Update(user);
@@ -366,16 +410,31 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task<string> GetEmailAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             return Task.FromResult(user.Email);
         }
 
         public Task<bool> GetEmailConfirmedAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             return Task.FromResult(user.EmailConfirmed);
         }
 
         public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             user.EmailConfirmed = confirmed;
 
             _database.Update(user);
@@ -401,6 +460,16 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task SetPhoneNumberAsync(TUser user, string phoneNumber)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
+            if (string.IsNullOrEmpty(phoneNumber))
+            {
+                throw new ArgumentException("Null or empty argument: phoneNumber");
+            }
+
             user.PhoneNumber = phoneNumber;
 
             _database.Update(user);
@@ -410,16 +479,31 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task<string> GetPhoneNumberAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             return Task.FromResult(user.PhoneNumber);
         }
 
         public Task<bool> GetPhoneNumberConfirmedAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             return Task.FromResult(user.PhoneNumberConfirmed);
         }
 
         public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             user.PhoneNumberConfirmed = confirmed;
 
             _database.Update(user);
@@ -433,6 +517,11 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task SetTwoFactorEnabledAsync(TUser user, bool enabled)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             user.TwoFactorEnabled = enabled;
 
             _database.Update(user);
@@ -442,6 +531,11 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task<bool> GetTwoFactorEnabledAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: ");
+            }
+
             return Task.FromResult(user.TwoFactorEnabled);
         }
 
@@ -452,11 +546,21 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             return Task.FromResult(user.LockoutEndDateUtc.HasValue ? new DateTimeOffset(DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc)) : new DateTimeOffset());
         }
 
         public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             user.LockoutEndDateUtc = lockoutEnd.UtcDateTime;
 
             _database.Update(user);
@@ -466,6 +570,11 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task<int> IncrementAccessFailedCountAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             user.AccessFailedCount++;
 
             _database.Update(user);
@@ -475,6 +584,11 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task ResetAccessFailedCountAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             user.AccessFailedCount = 0;
 
             _database.Update(user);
@@ -484,16 +598,31 @@ namespace NPoco.Identity.Provider.Stores
 
         public Task<int> GetAccessFailedCountAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             return Task.FromResult(user.AccessFailedCount);
         }
 
         public Task<bool> GetLockoutEnabledAsync(TUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             return Task.FromResult(user.LockoutEnabled);
         }
 
         public Task SetLockoutEnabledAsync(TUser user, bool enabled)
         {
+            if (user == null)
+            {
+                throw new ArgumentException("Null or empty argument: user");
+            }
+
             user.LockoutEnabled = enabled;
 
             _database.Update(user);
