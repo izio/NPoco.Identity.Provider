@@ -24,9 +24,14 @@ namespace NPoco.Identity.Provider.Stores
     {
         private Database _database;
 
-        public UserStore(string database)
+        public UserStore(string connectionName)
         {
-            _database = new Database(database);
+            _database = new Database(connectionName);
+        }
+
+        public UserStore(string connectionString, DatabaseType type)
+        {
+            _database = new Database(connectionString, type);
         }
 
         #region IUserStore
@@ -349,9 +354,10 @@ namespace NPoco.Identity.Provider.Stores
             {
                 throw new ArgumentException("Null or empty argument: user");
             }
-            var identity = _database.SingleOrDefaultById<TUser>(user.Id);
 
-            return Task.FromResult(bool.Parse(identity.PasswordHash));
+            var passwordHash = _database.SingleOrDefaultById<TUser>(user.Id).PasswordHash;
+
+            return Task.FromResult(!string.IsNullOrEmpty(passwordHash));
         }
 
         #endregion
