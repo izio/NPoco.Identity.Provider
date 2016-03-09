@@ -42,16 +42,18 @@ namespace NPoco.Identity.Provider
         /// <param name="columns"></param>
         public TableProperties(string id, string alias, List<string> columns)
         {
-            if (string.IsNullOrEmpty(Id))
+            if (string.IsNullOrEmpty(id))
             {
                 throw new ArgumentException("id");
             }
 
-            if (string.IsNullOrEmpty(Alias))
+            if (string.IsNullOrEmpty(alias))
             {
                 throw new ArgumentException("alias");
             }
 
+            Id = id;
+            Alias = alias;
             Columns = columns;
         }
 
