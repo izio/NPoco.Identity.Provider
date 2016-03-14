@@ -1,5 +1,5 @@
 ﻿using NPoco.Identity.Provider.Stores;
-using NPoco.Identity.Provider.Tests.Modesl;
+using NPoco.Identity.Provider.Tests.Models;
 using System;
 using Xunit;
 

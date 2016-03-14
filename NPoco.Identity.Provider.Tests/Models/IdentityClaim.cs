@@ -1,6 +1,6 @@
 ﻿using NPoco.Identity.Provider.Interfaces;
 
-namespace NPoco.Identity.Provider.Tests.Modesl
+namespace NPoco.Identity.Provider.Tests.Models
 {
     [TableName("AspNetUserClaims")]
     public class IdentityClaim : IIdentityClaim<int>

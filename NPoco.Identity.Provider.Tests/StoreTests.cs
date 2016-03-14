@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
-using NPoco.Identity.Provider.Tests.Modesl;
+using NPoco.Identity.Provider.Tests.Models;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;

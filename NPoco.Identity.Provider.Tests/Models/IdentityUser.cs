@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace NPoco.Identity.Provider.Tests.Modesl
+namespace NPoco.Identity.Provider.Tests.Models
 {
     [TableName("AspNetUsers")]
     [PrimaryKey("Id", AutoIncrement = true)]
@@ -70,13 +70,6 @@ namespace NPoco.Identity.Provider.Tests.Modesl
         {
             get; set;
         }
-
-        [Ignore]
-        public ICollection<IdentityClaim> Claims { get; set; }
-        [Ignore]
-        public ICollection<IdentityRole> Roles { get; set; }
-        [Ignore]
-        public ICollection<IdentityLogin> Logins { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<IdentityUser, int> manager)
         {
