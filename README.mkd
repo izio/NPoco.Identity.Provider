@@ -1,0 +1,14 @@
+#NPoco.Identity.Provider
+
+NPoco.Identity.Provider is an AspNet Identity 2.0 Storage Provider built using [NPoco](https://github.com/schotime/NPoco/), to use it in your projects you will need to implement the following interfaces where T is the primary key data type:
+
+- `IIdentityUser<T>`
+- `IIdentityRoles<T>`
+- `IIdentityClaim<T>`
+- `IIdentityLogin<T>`
+- `IIdentityRole<T>`
+
+You can use NPoco attributes to provide an alias for your table names and primary key columns. If you are not using strings as your primary key data type then you will need to follow [this guide from microsoft](http://www.asp.net/identity/overview/extensibility/change-primary-key-for-users-in-aspnet-identity). Alternatively you can use the [NPoco.Identity.Provider.Website](https://github.com/izio/NPoco.Identity.Provider.Website) template
+
+##Tests
+To run the tests please create a MSSQL database and run the `Database Setup` script included in the Database folder. Once the database has been setup you will need to set the connection string in the `DatabaseFixture.cs` class.
