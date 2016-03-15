@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNet.Identity;
 using NPoco.Identity.Provider.Interfaces;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NPoco.Identity.Provider.Stores
 {
-    public class RoleStore<TRole, TKey> : IQueryableRoleStore<TRole, TKey> where TRole : IIdentityRole<TKey>
+    public class RoleStore<TRole, TKey> : IRoleStore<TRole, TKey> where TRole : IIdentityRole<TKey>
     {
         private Database _database;
 
@@ -19,16 +18,8 @@ namespace NPoco.Identity.Provider.Stores
         {
             _database = new Database(connectionString, type);
         }
-
-        #region IQueryableRoleStore
-
-        public IQueryable<TRole> Roles
-        {
-            get
-            {
-                return _database.Fetch<TRole>() as IQueryable<TRole>;
-            }
-        }
+        
+        #region IRoleStore
 
         public Task CreateAsync(TRole role)
         {
