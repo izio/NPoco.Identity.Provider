@@ -3,6 +3,7 @@
 namespace NPoco.Identity.Provider.Tests.Models
 {
     [TableName("AspNetUserLogins")]
+    [PrimaryKey("LoginProvider, ProviderKey, UserId")]
     public class IdentityLogin : IIdentityLogin<int>
     {
         public string LoginProvider

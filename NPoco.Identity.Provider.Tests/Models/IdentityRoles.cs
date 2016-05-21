@@ -3,6 +3,7 @@
 namespace NPoco.Identity.Provider.Tests.Models
 {
     [TableName("AspNetUserRoles")]
+    [PrimaryKey("RoleId, UserId")]
     public class IdentityRoles : IIdentityRoles<int>
     {
         public int RoleId

@@ -40,11 +40,11 @@ namespace NPoco.Identity.Provider.Extensions
 
             var primaryFactory = database.PocoDataFactory.ForType(typeof(T1));
             var primaryTable = primaryFactory.TableInfo.TableName;
-            var primaryKey = primaryFactory.Columns.FirstOrDefault(c => c.Value.MemberInfo.Name == primary.Id).Key;
+            var primaryKey = primaryFactory.Columns.FirstOrDefault(c => c.Value.MemberInfoData.Name == primary.Id).Key;
 
             var foreignFactory = database.PocoDataFactory.ForType(typeof(T2));
             var foreignTable = foreignFactory.TableInfo.TableName;
-            var foreignKey = foreignFactory.Columns.FirstOrDefault(c => c.Value.MemberInfo.Name == foreign.Id).Key;
+            var foreignKey = foreignFactory.Columns.FirstOrDefault(c => c.Value.MemberInfoData.Name == foreign.Id).Key;
 
             return string.Format("SELECT {0}{1} FROM {2} AS {3} {4} {5} AS {6} ON {3}.{7} = {6}.{8} {9}", primary.GetColumns(), foreign.GetColumns(), primaryTable, primary.Alias, join.GetDescription(), foreignTable, foreign.Alias, primaryKey, foreignKey, where);
         }
@@ -74,11 +74,11 @@ namespace NPoco.Identity.Provider.Extensions
 
             var primaryFactory = database.PocoDataFactory.ForType(typeof(T1));
             var primaryTable = primaryFactory.TableInfo.TableName;
-            var primaryKey = primaryFactory.Columns.FirstOrDefault(c => c.Value.MemberInfo.Name == primary.Id).Key;
+            var primaryKey = primaryFactory.Columns.FirstOrDefault(c => c.Value.MemberInfoData.Name == primary.Id).Key;
 
             var foreignFactory = database.PocoDataFactory.ForType(typeof(T2));
             var foreignTable = foreignFactory.TableInfo.TableName;
-            var foreignKey = foreignFactory.Columns.FirstOrDefault(c => c.Value.MemberInfo.Name == foreign.Id).Key;
+            var foreignKey = foreignFactory.Columns.FirstOrDefault(c => c.Value.MemberInfoData.Name == foreign.Id).Key;
 
             return string.Format("DELETE {0} FROM {1} AS {0} {2} {3} AS {4} ON {0}.{5} = {4}.{6} {7}", primary.Alias, primaryTable, join.GetDescription(), foreignTable, foreign.Alias, primaryKey, foreignKey, where);
         }
